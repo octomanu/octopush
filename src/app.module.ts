@@ -6,6 +6,7 @@ import { DatabaseModule } from './database/database.module';
 import { MessageModule } from './app-modules/message/message.module';
 import { GatewayModule } from './gateway/gateway.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PushNotificationsModule } from './app-modules/push-notifications/push-notifications.module';
 
 @Module({
   imports: [
@@ -14,8 +15,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     DatabaseModule,
     MessageModule,
     GatewayModule,
+    PushNotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
