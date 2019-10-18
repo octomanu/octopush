@@ -9,4 +9,10 @@ export class NotificationService {
   private readonly notificationRepository = getRepository(Notification);
   private readonly notificationUserRepository = getRepository(NotificationUser);
   private readonly userRepository = getRepository(User);
+
+
+  save(data: any){
+      const notification =  
+    return this.notificationRepository.save(photo);
+  }
 }
