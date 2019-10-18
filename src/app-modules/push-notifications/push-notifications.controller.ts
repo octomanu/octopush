@@ -39,7 +39,7 @@ export class PushNotificationsController {
     sendPush() {
 
         const not = {
-            title: 'test',
+            title: 'Hola Octopus!',
             user: 'none',
             message: 'ejejeje'
         };

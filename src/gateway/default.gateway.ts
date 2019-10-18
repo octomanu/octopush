@@ -19,10 +19,12 @@ export class DefaultGateway
     client.join('adm-1');
     console.log('on: ', this.conections.conections);
   }
+
   handleDisconnect(client: Socket) {
     this.conections.remove(client.id);
     console.log('off: ', this.conections.conections);
   }
+
   afterInit(server: any) {
     this.conections.server = server;
     console.log('init default: ');

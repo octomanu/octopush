@@ -4,6 +4,8 @@ import { Server } from 'socket.io';
 @Injectable()
 export class ConectionService {
   private conectionsBag: { [key: string]: boolean } = {};
+  private usersBag: { [key: string]: string[] } = {};
+  private administrationsBag: { [key: string]: string[] } = {};
   private socketServer: Server;
 
   set server(socketServer: Server) {
@@ -16,6 +18,24 @@ export class ConectionService {
 
   get conections() {
     return { ...this.conectionsBag };
+  }
+
+  registerUser(userId, administrationId, clientId: string) {
+    if (!this.usersBag[userId]) {
+      this.usersBag[userId] = [];
+    }
+
+    if (!this.administrationsBag[administrationId]) {
+      this.administrationsBag[administrationId] = [];
+    }
+
+    if (this.usersBag[userId].indexOf(clientId) === -1) {
+      this.usersBag[userId].push(clientId);
+    }
+
+    if (this.administrationsBag[administrationId].indexOf(clientId) === -1) {
+      this.administrationsBag[administrationId].push(clientId);
+    }
   }
 
   add(id: string) {
