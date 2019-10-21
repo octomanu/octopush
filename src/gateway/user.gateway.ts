@@ -14,8 +14,8 @@ export class UserGateway {
   @SubscribeMessage('register')
   handleEvent(client: Socket, data: any): string {
     this.conections.registerUser(data.userId, data.administrationId, client.id);
+    client.join(`[Administration-${data.administrationId}]`);
     console.log('registered user: ', client.id);
-    console.log(data);
     return data;
   }
 }

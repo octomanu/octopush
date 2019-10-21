@@ -16,7 +16,6 @@ export class DefaultGateway
 
   handleConnection(client: Socket, ...args: any[]) {
     this.conections.add(client.id);
-    client.join('adm-1');
     console.log('on: ', this.conections.conections);
   }
 

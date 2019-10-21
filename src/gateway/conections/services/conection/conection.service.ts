@@ -21,21 +21,8 @@ export class ConectionService {
   }
 
   registerUser(userId, administrationId, clientId: string) {
-    if (!this.usersBag[userId]) {
-      this.usersBag[userId] = [];
-    }
-
-    if (!this.administrationsBag[administrationId]) {
-      this.administrationsBag[administrationId] = [];
-    }
-
-    if (this.usersBag[userId].indexOf(clientId) === -1) {
-      this.usersBag[userId].push(clientId);
-    }
-
-    if (this.administrationsBag[administrationId].indexOf(clientId) === -1) {
-      this.administrationsBag[administrationId].push(clientId);
-    }
+    this.pushUserBag(userId, clientId);
+    this.pushAdministrtionBag(administrationId, clientId);
   }
 
   add(id: string) {
@@ -43,10 +30,39 @@ export class ConectionService {
   }
 
   remove(id: string) {
+    for (const key in this.usersBag) {
+      if (this.usersBag[key].indexOf(id) !== -1) {
+        delete this.usersBag[key];
+      }
+    }
+
     delete this.conectionsBag[id];
   }
 
   exist(id: string) {
     return this.conectionsBag.hasOwnProperty(id);
+  }
+
+  getUserConection(userId: number): any[] {
+    return this.usersBag[userId] ? this.usersBag[userId] : [];
+  }
+
+  private pushUserBag(userId, clientId) {
+    if (!this.usersBag[userId]) {
+      this.usersBag[userId] = [];
+    }
+    if (this.usersBag[userId].indexOf(clientId) === -1) {
+      this.usersBag[userId].push(clientId);
+    }
+  }
+
+  private pushAdministrtionBag(administrationId, clientId) {
+    if (!this.administrationsBag[administrationId]) {
+      this.administrationsBag[administrationId] = [];
+    }
+
+    if (this.administrationsBag[administrationId].indexOf(clientId) === -1) {
+      this.administrationsBag[administrationId].push(clientId);
+    }
   }
 }

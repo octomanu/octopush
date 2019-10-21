@@ -1,54 +1,41 @@
-import { Controller, Post, Get, UseInterceptors, Header, Body } from '@nestjs/common';
+import { Controller, Post, Get, UseInterceptors, Body } from '@nestjs/common';
 import { BufferInterceptor } from './buffer.interceptor';
 import * as urlSafeBase64 from 'urlsafe-base64';
 import * as webPush from 'web-push';
+import { PushNotificationsService } from './services/push-notifications.service';
 const vapid = require('../../../vapid.json');
 
 @Controller('push')
 export class PushNotificationsController {
+  private subscripcions = [];
 
+  constructor(
+    private readonly pushNotificationsService: PushNotificationsService,
+  ) {}
 
-    private subscripcions = [];
+  @Post('subscribe')
+  subscribe(@Body() body) {
+    this.pushNotificationsService.save(body.subscription, body.userId);
+  }
 
-    constructor() {
-        webPush.setVapidDetails(
-            'mailto:mpanizzo@octopus.com.ar',
-            vapid.publicKey,
-            vapid.privateKey
-        );
-    }
+  @Get('key')
+  @UseInterceptors(new BufferInterceptor())
+  key() {
+    return urlSafeBase64.decode(vapid.publicKey);
+  }
 
-    @Post('subscribe')
-    subscribe(@Body() body) {
-        console.log("body_: ", body);
-        this.subscripcions.push(body.subscription);
-    }
-
-
-    @Get('key')
-    @UseInterceptors(new BufferInterceptor())
-    key() {
-
-        console.log(urlSafeBase64.decode(vapid.publicKey));
-        return urlSafeBase64.decode(vapid.publicKey);
-
-    }
-
-    //a servicio
-    @Get('test')
-    sendPush() {
-
-        const not = {
-            title: 'Hola Octopus!',
-            user: 'none',
-            message: 'ejejeje'
-        };
-
-        this.subscripcions.forEach((subs, index) => {
-            console.log("send notification");
-            webPush.sendNotification(subs, JSON.stringify(not));
-
-        });
-
-    }
+  //a servicio
+  @Get('test')
+  sendPush() {
+    // const not = {
+    //   title: 'Hola Octopus!',
+    //   user: 'none',
+    //   message: 'ejejeje',
+    // };
+    // this.pushConectionsService.save(body.subscription, body.userId);
+    // this.subscripcions.forEach((subs, index) => {
+    //   console.log('send notification');
+    //   webPush.sendNotification(subs, JSON.stringify(not));
+    // });
+  }
 }
