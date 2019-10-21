@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm';
 import { User } from './user.entity';
 import { Notification } from './notification.entity';
 
@@ -9,6 +9,9 @@ export class NotificationUser {
 
   @ManyToOne(type => User, user => user.pushSubscriptions)
   user: User;
+
+  @Column()
+  readed: boolean;
 
   @ManyToOne(
     type => Notification,

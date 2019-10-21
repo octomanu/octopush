@@ -12,7 +12,7 @@ export class NotificationService {
 
 
   save(data: any){
-      const notification =  
-    return this.notificationRepository.save(photo);
+
+    return this.notificationRepository.save(data);
   }
 }

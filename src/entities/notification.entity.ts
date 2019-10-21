@@ -6,10 +6,10 @@ export class Notification {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('string')
+  @Column()
   title: string;
 
-  @Column('string')
+  @Column()
   message: string;
 
   @OneToMany(
