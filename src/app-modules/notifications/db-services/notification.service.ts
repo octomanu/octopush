@@ -4,6 +4,7 @@ import { Notification } from '../../../entities/notification.entity';
 import { User } from '../../../entities/user.entity';
 import { NotificationUser } from '../../../entities/notification-user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreateNotificationDto } from '../dto/create-notification.dto';
 
 @Injectable()
 export class NotificationService {
@@ -16,14 +17,12 @@ export class NotificationService {
     private readonly notificationUserRepository: Repository<NotificationUser>,
   ) {}
 
-  save(data: any, userId: string) {
-    const notification = {
-      title: 'test',
-      message: 'test message',
-    };
+  save(data: CreateNotificationDto) {
+    const notification = { ...data };
+    delete notification.idUsuario;
     return Promise.all([
       this.notificationRepository.save(notification),
-      this.userRepository.findOne(userId),
+      this.userRepository.findOne(data.idUsuario),
     ]).then(([notificationDb, userDb]) =>
       this.notificationUserRepository.save({
         user: userDb,
@@ -36,33 +35,50 @@ export class NotificationService {
   getNotifications(userId: number, offset: number = 0) {
     return this.notificationUserRepository
       .createQueryBuilder('nu')
-      .select(['notification', 'nu.readed'])
+      .select([
+        'notification.id as id',
+        'notification.message as message',
+        'notification.title as title',
+        'nu.readed as readed',
+      ])
       .leftJoin('nu.notification', 'notification')
       .limit(10)
       .offset(offset)
       .where('nu.user = :user', {
         user: userId,
       })
+      .orderBy('nu.id', 'DESC')
       .execute();
   }
 
-  getUnreadNotifications(userId: number, offset: number = 0) {
+  markAsRead(notificationId: number, userId: number) {
+    return this.notificationUserRepository
+      .createQueryBuilder()
+      .update()
+      .set({ readed: true })
+      .where('user = :user AND notification = :notification', {
+        user: userId,
+        notification: notificationId,
+      })
+      .execute();
+  }
+
+  getUnreadNotifications(userId: number, offset = 0, limit = 5) {
     return this.notificationUserRepository
       .createQueryBuilder('nu')
-      .select(['notification'])
+      .select([
+        'notification.id as id',
+        'notification.message as message',
+        'notification.title as title',
+        'nu.readed as readed',
+      ])
       .leftJoin('nu.notification', 'notification')
-      .limit(10)
+      .limit(limit)
       .offset(offset)
       .where('nu.user = :user AND nu.readed = :readed', {
         user: userId,
         readed: false,
       })
       .execute();
-
-    return this.notificationUserRepository.find({
-      select: ['notification'],
-      relations: ['notification'],
-      where: { user: { id: userId, octopusId: 1 }, readed: false },
-    });
   }
 }

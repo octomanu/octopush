@@ -17,10 +17,9 @@ export class NotificatorService {
     }
 
     conections.forEach(conection => {
-      this.conectionService.server.to(conection).emit('[User] Notification', {
-        title: notification.title,
-        message: notification.message,
-      });
+      this.conectionService.server
+        .to(conection)
+        .emit('[User] Notification', { ...notification, readed: false });
     });
   }
 }

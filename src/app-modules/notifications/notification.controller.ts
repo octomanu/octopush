@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, Query } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Query, Put } from '@nestjs/common';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { NotificationService } from './db-services/notification.service';
 import { NotificatorService } from './services/notificator.service';
@@ -18,13 +18,29 @@ export class NotificationController {
   }
 
   @Get('unread/:userId')
-  unread(@Param('userId') userId: number, @Query('offset') offset: number) {
-    return this.notificationService.getUnreadNotifications(userId, offset);
+  unread(
+    @Param('userId') userId: number,
+    @Query('offset') offset: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.notificationService.getUnreadNotifications(
+      userId,
+      offset,
+      limit,
+    );
+  }
+
+  @Put(':userId/markAsRead')
+  markAsRead(
+    @Param('userId') userId: number,
+    @Body() data: { notificationId: number },
+  ) {
+    return this.notificationService.markAsRead(data.notificationId, userId);
   }
 
   @Post()
   create(@Body() data: CreateNotificationDto) {
-    return this.notificationService.save({}, '1').then(userNotification => {
+    return this.notificationService.save(data).then(userNotification => {
       if (this.notificator.hasConection(userNotification.user.octopusId)) {
         this.notificator.notify(
           userNotification.user,
