@@ -79,6 +79,7 @@ export class NotificationService {
         user: userId,
         readed: false,
       })
+      .orderBy('nu.id', 'DESC')
       .execute();
   }
 }
