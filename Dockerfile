@@ -1,4 +1,4 @@
-FROM node:alpine as builder
+FROM node:10.16-alpine
 
 RUN npm i -g @nestjs/cli
 
@@ -9,9 +9,5 @@ WORKDIR /home/node
 RUN npm install
 
 RUN npm run build
-
-FROM node:alpine AS prod
-
-COPY --from=builder /home/node/dist /home/node/dist
 
 CMD ["node", "dist/main"]
