@@ -5,6 +5,7 @@ import { User } from '../../../entities/user.entity';
 import { NotificationUser } from '../../../entities/notification-user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateNotificationDto } from '../dto/create-notification.dto';
+import { UserRepo } from '../../../entities/repository';
 
 @Injectable()
 export class NotificationService {
@@ -15,14 +16,15 @@ export class NotificationService {
     private readonly notificationRepository: Repository<Notification>,
     @InjectRepository(NotificationUser)
     private readonly notificationUserRepository: Repository<NotificationUser>,
-  ) {}
+    private readonly userRepo: UserRepo,
+  ) { }
 
   save(data: CreateNotificationDto) {
     const notification = { ...data };
     delete notification.idUsuario;
     return Promise.all([
       this.notificationRepository.save(notification),
-      this.userRepository.findOne(data.idUsuario),
+      this.userRepo.findOneByOctoId(data.idUsuario),
     ]).then(([notificationDb, userDb]) =>
       this.notificationUserRepository.save({
         user: userDb,

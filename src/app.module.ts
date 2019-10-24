@@ -8,6 +8,7 @@ import { GatewayModule } from './gateway/gateway.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PushNotificationsModule } from './app-modules/push-notifications/push-notifications.module';
 import { NotificationsModule } from './app-modules/notifications/notifications.module';
+import { EntitiesModule } from './entities/entities.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { NotificationsModule } from './app-modules/notifications/notifications.m
     GatewayModule,
     PushNotificationsModule,
     NotificationsModule,
+    EntitiesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

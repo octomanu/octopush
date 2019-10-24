@@ -2,7 +2,7 @@ import { IsString, IsNumber } from 'class-validator';
 
 export class CreateNotificationDto {
   @IsNumber()
-  readonly idUsuario: string;
+  readonly idUsuario: number;
 
   @IsString()
   readonly title: string;
