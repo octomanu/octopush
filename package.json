@@ -27,7 +27,7 @@
     "@nestjs/platform-socket.io": "^6.8.2",
     "@nestjs/typeorm": "^6.2.0",
     "@nestjs/websockets": "^6.8.2",
-    "class-validator": "^0.10.2",
+    "class-validator": "^0.14.0",
     "helmet": "^3.21.1",
     "pg": "^7.12.1",
     "reflect-metadata": "^0.1.13",
